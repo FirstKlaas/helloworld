@@ -1,0 +1,16 @@
+.macro SPRITE_MOVE_HORIZONTAL_V(idx) {
+    lda VIRT_XPOS-1,x
+    clc
+    adc DELTA_X-1,x 
+    sta VIRT_XPOS-1,x 
+}
+
+.macro SPRITE_MOVE_VERTICAL() {
+    lda VIRT_YPOS-1,x 
+    clc
+    adc DELTA_Y-1,x 
+    sta VIRT_YPOS-1,x 
+}
+
+
+
