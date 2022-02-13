@@ -3,8 +3,9 @@
 /bin
 /buildlog.txt
 /lost_sprites.vsf
-/main-vice.log
-/main.dbg
-/main.prg
-/main.sym
-/main.vs
+/*-vice.log
+/*.dbg
+/*.prg
+/*.sym
+/*.vs
+/.*
