@@ -1,4 +1,4 @@
-    .var COND_DEBUG = true
+    .var COND_DEBUG = false
 
     .const MONSTER_A_BLK        = (monster_a_1/64)
     .const MONSTER_B_BLK        = (monster_b_1/64)
@@ -138,7 +138,7 @@ main:
     lda #GAME_STATE_CREDITS
     sta ZP_GameState_Credits
 
-    lda #$02 
+    lda #$01 
     sta ZP_MONSTER_SPEED_RIGHT
     lda #$ff
     sta ZP_MONSTER_SPEED_LEFT

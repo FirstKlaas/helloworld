@@ -147,6 +147,8 @@ check_monster_low_position:
 //
 // ----------------------------------------------
 on_game_state_victory:
+    lda #0 
+    sta SPRITEACTIV
     jsr SCREEN.clear
     PRINT_STR_ZERO(11,5,msg_victory_1)
     PRINT_STR_ZERO(6,7,msg_victory_2)
@@ -165,6 +167,8 @@ on_game_state_victory:
 //
 // ----------------------------------------------
 on_game_state_defeat:
+    lda #0 
+    sta SPRITEACTIV
     PRINT_STR_ZERO(8,6,msg_defeated)
     jsr BULLETTEST.clear_bullets
     jsr BULLETTEST.free_all_bullets

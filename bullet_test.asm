@@ -1,6 +1,6 @@
 .namespace BULLETTEST {
 
-    .const NUMBER_OF_BULLETS=4
+    .const NUMBER_OF_BULLETS=2
     .const BULLET_START_ROW=22
     .const BULLETCHAR=$f0
 
@@ -301,6 +301,10 @@
         lsr 
         sec 
         sbc #2 
+        cmp BXPOS-1,X
+        beq !monster_hit+
+        clc 
+        adc #1 
         cmp BXPOS-1,X
         beq !monster_hit+ 
         bcs !next_monster+ 
