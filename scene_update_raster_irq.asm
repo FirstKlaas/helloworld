@@ -74,7 +74,21 @@ check_game_state_unknown:
 //
 // ----------------------------------------------
 on_game_state_play:
+    lda #0 
+    sta ZP_MONSTER_DOWN_FLAG
+    ldx #0
     jsr MONSTER.update    
+    ldx #8
+    jsr MONSTER.update    
+    ldx #16
+    jsr MONSTER.update    
+    ldx #24
+    jsr MONSTER.update
+
+    lda ZP_MONSTER_DOWN_FLAG 
+    beq !+ 
+    jsr MONSTER.update_move_down
+!:
     jsr SPRITES.update_xpos 
 
     // Da wir noch nicht abschießen können, werden wohl alle Monster leben
@@ -178,23 +192,23 @@ start_new_game:
     jsr SCREEN.clear
     SET_GAME_STATE(GAME_STATE_PLAY)
 
-    // Die Monster neu positionieren.
-    .for (var row=0; row<4; row++) {
-        lda #[MONSTER_MIN_Y+row*MONSTER_SPACING_V]
-        .for (var i=0; i<8; i++) {
-            sta YPOS+(8*row)+i                  // Alle haben die gleiche Höhe
-        }
-    }
-
-
-    // Alle Monster auf den Status "lebendig" setzen.
-    ldx #MONSTER_COUNT
-    lda #SPRITE_STATE_ALIVE 
+    INIT_MONSTER()
 
 !loop:
     sta SPRITE_STATE-1,x 
     dex
     bne !loop-
+
+    // Alle wieder nach "rechts" bewegen
+    lda #1 
+    ldx #MONSTER_COUNT 
+!loop:
+    sta SPRITE_DX-1,x 
+    dex
+    bne !loop-
+
+
+    // Alle Sprites wieder auf "active/sichtbar" setzen.
     lda #255 
     sta ZP_SP_ACTIVE_R1
     sta ZP_SP_ACTIVE_R2
@@ -214,15 +228,37 @@ next_raster_irq:
     jsr SCORE.print_score
     lda GlobalGameState
     cmp #GAME_STATE_PLAY
-    bne !+
+    beq !+
+    SET_RASTER_LINE_V(RASTERLINE_SPACESHIP)
+    INSTALL_RASTER_VECTOR(BULLETTEST.raster_irq)
+    jmp !exit+
+!:
+    lda ZP_SP_ACTIVE_R1
+    beq !+
     INSTALL_RASTER_VECTOR(irq_monster_row_1)
     SET_RASTER_LINE_A(Rasterline_Monster_R1)
     jmp !exit+
 !:
+    lda ZP_SP_ACTIVE_R2
+    beq !+
+    INSTALL_RASTER_VECTOR(irq_monster_row_2)
+    SET_RASTER_LINE_A(Rasterline_Monster_R2)
+    jmp !exit+
+!:
+    lda ZP_SP_ACTIVE_R3
+    beq !+
+    INSTALL_RASTER_VECTOR(irq_monster_row_3)
+    SET_RASTER_LINE_A(Rasterline_Monster_R3)
+    jmp !exit+
+!:
+    lda ZP_SP_ACTIVE_R4
+    beq !+
+    INSTALL_RASTER_VECTOR(irq_monster_row_4)
+    SET_RASTER_LINE_A(Rasterline_Monster_R4)
+    jmp !exit+
+!:
     SET_RASTER_LINE_V(RASTERLINE_SPACESHIP)
     INSTALL_RASTER_VECTOR(BULLETTEST.raster_irq)
-    lda #0
-    sta SPRITEACTIV
 !exit:
     .if (COND_DEBUG) SET_BORDER_COLOR_V(COLOR_LIGHTBLUE)
     jmp irq_exit    

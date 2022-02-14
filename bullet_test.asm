@@ -1,6 +1,6 @@
 .namespace BULLETTEST {
 
-    .const NUMBER_OF_BULLETS=8
+    .const NUMBER_OF_BULLETS=4
     .const BULLET_START_ROW=22
     .const BULLETCHAR=$f0
 
@@ -194,11 +194,11 @@
     
     init:
         // Das Ship initial positionieren
-        lda #130
+        lda #30
         sta SPACESHIP_XPOS_LSB
         lda #219
         sta SPACESHIP_YPOS
-        lda #0
+        lda #1
         sta SPACESHIP_XPOS_MSB        
         rts
 

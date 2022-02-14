@@ -1,62 +1,109 @@
+.print "SPRITE DX: " + toHexString(SPRITE_DX)
 
 
 .namespace MONSTER {
 
     update:
-        // Da alle Monster in die gleiche Richtung laufen
-        // reicht mir auch die Richtung des ersten Sprites
-        // zu kennen.
-        lda SPRITE_DX
-        beq update_done             // 0 = No movement
+        // Alle Monster einer Reihe laufen in die gleiche Richtung
+        // Monster, deren State "DEAD" ist, werden bei der Betrachtung ignoriert
+        // Im X Register ist der Offset, bei dem wir beginnen.
+        stx TempByte
+        lda SPRITE_DX, x
+        bne !+ 
+        rts
+    !:  
+                  
         bmi update_left
+
 
     update_right:
         // Monsters are moving to the right
         // Check the right border of
-        // the rightmost sprite inthe row
-        lda XPOS_MSB+7               // If the most significant is zero, we
-        beq update_done             // are fine.
-        lda XPOS_LSB+7
+        // the rightmost sprite in the row
+        // that is not dead.
+        ldy #8
+        txa 
+        clc
+        adc #7 
+        tax
+    !loop:
+        lda SPRITE_STATE, x         // If the most significant is zero, we
+        cmp #SPRITE_STATE_DEAD
+        bne !rightmost+
+        dex 
+        dey 
+        bne !loop-
+        rts
+
+    !rightmost:
+        lda XPOS_MSB, x             // If the most significant is zero, we
+        bne !+                      // are fine.
+        rts
+    !:
+        lda XPOS_LSB, x
         cmp #60                     // Testweise gegen 266 testen (10 im lsb)
-        bcc update_done 
+        bcs !+
+        rts 
+    !: 
         lda #$ff                    // Testweise die Bewegung des ersten Sprites
                                     // nach links drehen.
+        ldx TempByte                // Self modified 
         jsr set_horizontal_speed   
-             
         // Eigentlich fertig, nun noch alle Monster nach unten schieben
-        jmp update_move_down
-
-    update_left: 
-        lda XPOS_MSB                // If the most significant is non zero, we
-        bne update_done             // are fine.
-        lda XPOS_LSB
+        // Daher das Flag setzen
+        lda #1 
+        sta ZP_MONSTER_DOWN_FLAG
+        rts
+        
+    update_left:
+        // Nun das Monster finden, dass am weitesten links
+        // und nicht tot ist
+        ldy #8                      // Maximal acht monster pruefen
+    !loop: 
+        lda SPRITE_STATE, x         // If the most significant is zero, we
+        cmp #SPRITE_STATE_DEAD
+        bne !left_most+
+        inx 
+        dey 
+        bne !loop-
+        rts                         // All sprites in the row are dead
+    !left_most:
+        lda XPOS_MSB, x             // If the most significant is zero,
+        beq !+                      // the monsters are fare away.
+        rts 
+    !:   
+        lda XPOS_LSB, x             
         cmp #24                     // Testweise gegen 266 testen (10 im lsb)
-        bcs update_done 
-        lda #$01                    // Bewegung der Monster
+        bcc !+
+        rts 
+    !: 
+        lda #$01                    // Bewegung der Monster nach rechts (+1)
+        ldx TempByte                // Original Offset wieder setzen
         jsr set_horizontal_speed    // nach rechts drehen.
-        jmp update_move_down
+        lda #1                      // Flag setzen, um zu kennzeichnen, dass die
+        sta ZP_MONSTER_DOWN_FLAG    // Monster nach unten bewegt werden müssen.
+        rts
+
+    set_horizontal_speed:
+        ldy #8
+    !:
+        sta SPRITE_DX, x
+        inx
+        dey
+        bne !-
+        rts
+
 
     update_move_down:
         ldx #MONSTER_COUNT
     !:    
         lda YPOS-1,x 
+        clc
         adc MonsterDownLines 
         sta YPOS-1,x
         dex 
         bne !-
-        jmp update_done
-
-    update_done:
         rts
-
-    set_horizontal_speed:
-        ldx #MONSTER_COUNT
-    !:
-        sta SPRITE_DX-1, X
-        dex
-        bne !-
-        rts
-
 
     /**
         Finde das (lebende) Monster, das am niedrigsten ist, also

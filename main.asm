@@ -6,15 +6,15 @@
     .const MONSTER_D_BLK        = (monster_d_1/64)
     .const SPACESHIP_BLK        = (space_ship/64)
 
-    .const NUMBER_OF_SPRITES        = 40
-    .const MONSTER_SPACING_V        = 25            // Monster Spacing (from left corner to left corder) horizontal 
-    .const MONSTER_SPACING_H        = 25            // Monster Spacing (from top to top) vertically
+    .const NUMBER_OF_SPRITES        =  40
+    .const MONSTER_SPACING_V        =  25           // Monster Spacing (from left corner to left corder) horizontal 
+    .const MONSTER_SPACING_H        =  25           // Monster Spacing (from top to top) vertically
 
-    .const MONSTER_MIN_X            = 30
-    .const MONSTER_MIN_Y            = 60
+    .const MONSTER_MIN_X            =  30
+    .const MONSTER_MIN_Y            =  60
     .const MONSTER_MAX_Y            = 210           // If a "not dead" monster reaches this line, the player loses the game
-    .const MONSTER_COUNT            = 32            // Anzahl der Monster
-    .const MONSTER_RASTERLINE_DELTA =  6            // Anzahl der Rasterlinien oberhalb der Y Position
+    .const MONSTER_COUNT            =  32           // Anzahl der Monster
+    .const MONSTER_RASTERLINE_DELTA =   6           // Anzahl der Rasterlinien oberhalb der Y Position
 
     .const SPRITE_STATE_SPAWNING    = %00000001 
     .const SPRITE_STATE_ALIVE   	= %00000010
@@ -91,7 +91,8 @@
         ZP_SP_ACTIVE_R2:        .byte $00
         ZP_SP_ACTIVE_R3:        .byte $00
         ZP_SP_ACTIVE_R4:        .byte $00
-        
+        ZP_MONSTER_DOWN_FLAG:   .byte $00
+
 BasicUpstart2(main)
 
     *=$4000 "Program"
@@ -251,7 +252,7 @@ irq_exit:
         .fill NUMBER_OF_SPRITES, 0
 
     SPRITE_DX:
-        .fill NUMBER_OF_SPRITES, 0
+        .fill NUMBER_OF_SPRITES, 1
 
     SPRITE_DY:
         .fill NUMBER_OF_SPRITES, 0

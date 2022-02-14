@@ -122,6 +122,27 @@
     .for (var i=0; i<7; i++) {
         ADD_8BIT_TO_16BIT_AAAA(XPOS_LSB+(8*row)+i, XPOS_MSB+(8*row)+i, MONSTER_SPACING_H, XPOS_LSB+1+(8*row)+i, XPOS_MSB+1+(8*row)+i)    
     }
+
+    lda #0
+    .for (var i=0; i<8; i++) {
+        sta XPOS_MSB+(row*8)+i     
+    }
+
+    lda #1
+    .for (var i=0; i<8; i++) {
+        sta SPRITE_DX+(row*8)+i     
+    }
+
+    lda #0
+    .for (var i=0; i<8; i++) {
+        sta SPRITE_DY+(row*8)+i     
+    }
+
+    lda #SPRITE_STATE_ALIVE
+    .for (var i=0; i<8; i++) {
+        sta SPRITE_STATE+(row*8)+i     // Alle den gleichen Datenblock
+    }
+
 }
 
 

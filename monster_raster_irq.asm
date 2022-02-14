@@ -11,10 +11,31 @@ irq_monster_row_1:
     // Und VIC aktualisieren
     VIC_UPDATE_MONSTER_ROW(0)
 !:    
-    // Neuen Ratser Interrupt setzen
-    SET_RASTER_LINE_A(Rasterline_Monster_R2)
+    // Neuen Raster Interrupt setzen
+    lda ZP_SP_ACTIVE_R2
+    beq !+
     INSTALL_RASTER_VECTOR(irq_monster_row_2)
+    SET_RASTER_LINE_A(Rasterline_Monster_R2)
+    jmp !finish+
+!:
+    // Neuen Raster Interrupt setzen
+    lda ZP_SP_ACTIVE_R3
+    beq !+
+    INSTALL_RASTER_VECTOR(irq_monster_row_3)
+    SET_RASTER_LINE_A(Rasterline_Monster_R3)
+    jmp !finish+
+!:
+    // Neuen Raster Interrupt setzen
+    lda ZP_SP_ACTIVE_R4
+    beq !+
+    INSTALL_RASTER_VECTOR(irq_monster_row_4)
+    SET_RASTER_LINE_A(Rasterline_Monster_R4)
+    jmp !finish+
+!:
+    SET_RASTER_LINE_V(RASTERLINE_SPACESHIP)
+    INSTALL_RASTER_VECTOR(BULLETTEST.raster_irq)
 
+!finish:
     // fertig
     .if (COND_DEBUG) SET_BORDER_COLOR_V(COLOR_LIGHTBLUE)
     jmp irq_exit    
@@ -33,12 +54,23 @@ irq_monster_row_2:
     // Und VIC aktualisieren
     VIC_UPDATE_MONSTER_ROW(8)
 !:
-
-    // Dritte Monsterreihe
-    SET_RASTER_LINE_A(Rasterline_Monster_R3)
+    // Neuen Raster Interrupt setzen
+    lda ZP_SP_ACTIVE_R3
+    beq !+
     INSTALL_RASTER_VECTOR(irq_monster_row_3)
-    //SET_RASTER_LINE_V(Rasterline_Scene)
-    //INSTALL_RASTER_VECTOR(update_scene)
+    SET_RASTER_LINE_A(Rasterline_Monster_R3)
+    jmp !finish+
+!:
+    // Neuen Raster Interrupt setzen
+    lda ZP_SP_ACTIVE_R4
+    beq !+
+    INSTALL_RASTER_VECTOR(irq_monster_row_4)
+    SET_RASTER_LINE_A(Rasterline_Monster_R4)
+    jmp !finish+
+!:
+    SET_RASTER_LINE_V(RASTERLINE_SPACESHIP)
+    INSTALL_RASTER_VECTOR(BULLETTEST.raster_irq)
+!finish:
     .if (COND_DEBUG) SET_BORDER_COLOR_V(COLOR_LIGHTBLUE)
     jmp irq_exit
 
@@ -55,11 +87,17 @@ irq_monster_row_3:
     // Und VIC aktualisieren
     VIC_UPDATE_MONSTER_ROW(16)
 !:
-
-    // Jetz wieder zur Neuberechnung der Scene
-    SET_RASTER_LINE_A(Rasterline_Monster_R4)
+    // Neuen Raster Interrupt setzen
+    lda ZP_SP_ACTIVE_R4
+    beq !+
     INSTALL_RASTER_VECTOR(irq_monster_row_4)
+    SET_RASTER_LINE_A(Rasterline_Monster_R4)
+    jmp !finish+
+!:
+    SET_RASTER_LINE_V(RASTERLINE_SPACESHIP)
+    INSTALL_RASTER_VECTOR(BULLETTEST.raster_irq)
 
+!finish:
     // fertig
     .if (COND_DEBUG) SET_BORDER_COLOR_V(COLOR_LIGHTBLUE)
 
