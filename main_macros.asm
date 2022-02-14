@@ -128,7 +128,7 @@
         sta XPOS_MSB+(row*8)+i     
     }
 
-    lda #1
+    lda ZP_MONSTER_SPEED_RIGHT
     .for (var i=0; i<8; i++) {
         sta SPRITE_DX+(row*8)+i     
     }

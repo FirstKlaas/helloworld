@@ -45,7 +45,7 @@
         bcs !+
         rts 
     !: 
-        lda #$ff                    // Testweise die Bewegung des ersten Sprites
+        lda ZP_MONSTER_SPEED_LEFT   // Testweise die Bewegung des ersten Sprites
                                     // nach links drehen.
         ldx TempByte                // Self modified 
         jsr set_horizontal_speed   
@@ -77,7 +77,7 @@
         bcc !+
         rts 
     !: 
-        lda #$01                    // Bewegung der Monster nach rechts (+1)
+        lda ZP_MONSTER_SPEED_RIGHT  // Bewegung der Monster nach rechts (+1)
         ldx TempByte                // Original Offset wieder setzen
         jsr set_horizontal_speed    // nach rechts drehen.
         lda #1                      // Flag setzen, um zu kennzeichnen, dass die

@@ -92,6 +92,9 @@
         ZP_SP_ACTIVE_R3:        .byte $00
         ZP_SP_ACTIVE_R4:        .byte $00
         ZP_MONSTER_DOWN_FLAG:   .byte $00
+        ZP_MONSTER_SPEED_RIGHT: .byte $00
+        ZP_MONSTER_SPEED_LEFT:  .byte $00
+        
 
 BasicUpstart2(main)
 
@@ -134,6 +137,11 @@ main:
     sta ZP_GameState_Victory
     lda #GAME_STATE_CREDITS
     sta ZP_GameState_Credits
+
+    lda #$02 
+    sta ZP_MONSTER_SPEED_RIGHT
+    lda #$ff
+    sta ZP_MONSTER_SPEED_LEFT
 
     lda GAME_NEW_DELAY
     sta ZP_New_Game_Delay
