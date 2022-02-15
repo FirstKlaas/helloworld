@@ -94,7 +94,6 @@
         ZP_MONSTER_DOWN_FLAG:   .byte $00
         ZP_MONSTER_SPEED_RIGHT: .byte $00
         ZP_MONSTER_SPEED_LEFT:  .byte $00
-        
 
 BasicUpstart2(main)
 

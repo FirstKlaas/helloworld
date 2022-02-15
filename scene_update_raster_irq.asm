@@ -133,12 +133,28 @@ on_game_state_play:
 
     // Alle Monster tot => Gewonnen
     SET_GAME_STATE(GAME_STATE_VICTORY)
+
+    // Increase Level
+    sed 
+    clc
+    lda ZP_Level 
+    adc #1 
+    sta ZP_Level
+    cld
+
     jmp next_raster_irq
 
 check_monster_low_position:
     cmp #MONSTER_MAX_Y
     bcc !+
     SET_GAME_STATE(GAME_STATE_DEFEAT)
+
+    // Level und Score zurücksetzen
+    lda #0 
+    sta ZP_Level
+    sta ZP_ScoreLo
+    sta ZP_ScoreLo
+
 !:
     jmp next_raster_irq
 
@@ -149,14 +165,14 @@ check_monster_low_position:
 on_game_state_victory:
     lda #0 
     sta SPRITEACTIV
-    jsr SCREEN.clear
-    PRINT_STR_ZERO(11,5,msg_victory_1)
-    PRINT_STR_ZERO(6,7,msg_victory_2)
     jsr BULLETTEST.clear_bullets
     jsr BULLETTEST.free_all_bullets
+    //jsr SCREEN.clear
+    PRINT_STR_ZERO(11,5,msg_victory_1)
+    PRINT_STR_ZERO(6,7,msg_victory_2)
     ldx ZP_New_Game_Delay
     bne !+
-    jmp start_new_game
+    jmp start_new_level
 !:
     dex
     stx ZP_New_Game_Delay
@@ -169,9 +185,9 @@ on_game_state_victory:
 on_game_state_defeat:
     lda #0 
     sta SPRITEACTIV
-    PRINT_STR_ZERO(8,6,msg_defeated)
     jsr BULLETTEST.clear_bullets
     jsr BULLETTEST.free_all_bullets
+    PRINT_STR_ZERO(8,6,msg_defeated)
     ldx ZP_New_Game_Delay
     bne !+
     jmp start_new_game
@@ -180,11 +196,27 @@ on_game_state_defeat:
     stx ZP_New_Game_Delay
     jmp next_raster_irq
 
+
+// ---------------------------------------------
+// START NEW LEVEL
+//
+// ----------------------------------------------
+start_new_level:    
+    jmp start_game
+
 // ---------------------------------------------
 // START NEW GAME
 //
 // ----------------------------------------------
 start_new_game:
+    jmp start_game
+    // Reset level and Score
+    lda #0 
+    sta ZP_Level
+    sta ZP_ScoreLo
+    sta ZP_ScoreLo
+
+start_game:
     PRINT_STR_ZERO(10,10, msg_start_game)
     // TODO: Hier müsste noch eine "Warte-
     // schleife" hin, weil sonst bei gedrücktem
@@ -195,9 +227,10 @@ start_new_game:
 !:
     jsr SCREEN.clear
     SET_GAME_STATE(GAME_STATE_PLAY)
-
+    
     INIT_MONSTER()
 
+    lda #SPRITE_STATE_ALIVE
 !loop:
     sta SPRITE_STATE-1,x 
     dex

@@ -70,7 +70,6 @@
         lda ZP_Level
         and #$0f
         ora #48 
-        lda #48
         PRINT_FAST_CHAR_VVACC(39,0)
         lda ZP_Level
         lsr 

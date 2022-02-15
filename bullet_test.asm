@@ -25,6 +25,7 @@
         // there needs to be a cerain delay
         // FireButton is only allowed, if
         // bFireCounter is Zero
+        jsr clear_bullets
         ldx bFireCounter
         beq !read_joystick+ 
         dex
@@ -60,7 +61,6 @@
         jsr shoot
     !update:
         jsr update_xpos
-        jsr clear_bullets
         jsr move_bullets_up
         jsr draw_bullets
 
@@ -225,10 +225,10 @@
     raster_irq:
         IRQ_START()
         .if (COND_DEBUG) SET_BORDER_COLOR_V(COLOR_BLACK)
-        lda #%11111111          // Momentan besteht das Schiff aus nur einem Sprite
-        sta SPRITEACTIV
 
         // VIC aktualisieren
+        lda #%00000001          // Momentan besteht das Schiff aus nur einem Sprite
+        sta SPRITEACTIV
         
         lda SPACESHIP_YPOS
         lda #228
