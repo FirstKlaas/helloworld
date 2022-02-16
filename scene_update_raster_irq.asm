@@ -96,6 +96,7 @@ on_game_state_play:
     UPDATE_MONSTER_RASTER_LINES()
 
     jsr BULLETTEST.update_spaceship_scene
+    jsr SCREEN.print_barricade
 
     /* Animation des ersten Monsters */
     ldx Sprite0Anim
@@ -116,6 +117,7 @@ on_game_state_play:
 
     // Software Collision Check with bullets
     jsr BULLETTEST.check_for_collisions
+    jsr BULLETTEST.check_barricade_collision
 
     // Jetzt die Active Sprites pro Reihe
     // Ermitteln und in Variablen speichern

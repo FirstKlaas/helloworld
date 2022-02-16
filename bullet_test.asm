@@ -354,4 +354,34 @@
         bne !bullet_loop-
         rts
 
+
+check_barricade_collision:
+    ldx ZP_BARRICADE_ROW
+    lda SCREEN.ROW_ADR.lo,x
+    sta num2 
+    lda SCREEN.ROW_ADR.hi,x 
+    sta num2Hi
+    ldx #NUMBER_OF_BULLETS
+!loop:
+    lda FREE-1,x 
+    bne !next+
+
+    lda BYPOS-1,x 
+    cmp #20
+    bne !next+
+    // Same row. Now check xpos
+    ldy BXPOS-1,x 
+    lda (num2), y
+    cmp #20
+    beq !next+
+    cmp #$60
+    beq !next+
+    
+    lda #1 
+    sta FREE-1,x 
+
+!next:
+    dex 
+    bne !loop- 
+    rts
 }

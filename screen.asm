@@ -85,6 +85,7 @@
     sta (num1),y 
 }
 
+
 .namespace SCREEN {
 
     ROW_ADR:
@@ -211,4 +212,25 @@
         tay
         lda (num1), y 
         rts
+
+    // Prints a barricade row. 
+    // Y Register contains the row.
+    print_barricade:
+        lda #$78
+        sta num1
+        lda #$28
+        sta num1Hi
+        ldx ZP_BARRICADE_ROW
+        lda ROW_ADR.lo,x
+        sta num2 
+        lda ROW_ADR.hi,x 
+        sta num2Hi
+        ldy #40
+    !loop:
+        lda (num1),y 
+        sta (num2),y 
+        dey 
+        bne !loop-
+        rts
+
 }

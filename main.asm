@@ -94,6 +94,7 @@
         ZP_MONSTER_DOWN_FLAG:   .byte $00
         ZP_MONSTER_SPEED_RIGHT: .byte $00
         ZP_MONSTER_SPEED_LEFT:  .byte $00
+        ZP_BARRICADE_ROW:       .byte $00
 
 BasicUpstart2(main)
 
@@ -125,7 +126,8 @@ Anim_Monster_C_Live:
     MAIN PROGRAM LOOP
 ************************************************/
 main:
-
+    lda #20 
+    sta ZP_BARRICADE_ROW
     lda #GAME_STATE_INTRO
     sta ZP_GameState_Intro
     lda #GAME_STATE_PLAY
@@ -269,6 +271,9 @@ irq_exit:
 
     *=$2000 "Charset"
         .import source "data\invader_charset.asm"
+
+    *=$2800 "Barricade Screen"
+        .import source "screens\barricade.asm"
 
     *=$3400 "Spritedata"
     .align $40
