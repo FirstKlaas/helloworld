@@ -91,6 +91,9 @@
     ROW_ADR:
         .lohifill 25, $0400 + 40*i
 
+    ROW_BARRICADE_ADR:
+        .lohifill 25, $2800 + 40*i
+
     player_xy_to_screen_xy:
         txa
         clc
@@ -216,9 +219,10 @@
     // Prints a barricade row. 
     // Y Register contains the row.
     print_barricade:
-        lda #$78
+        ldx ZP_LEVEL_BINARY
+        lda ROW_BARRICADE_ADR.lo, x
         sta num1
-        lda #$28
+        lda ROW_BARRICADE_ADR.hi, x
         sta num1Hi
         ldx ZP_BARRICADE_ROW
         lda ROW_ADR.lo,x

@@ -95,6 +95,9 @@
         ZP_MONSTER_SPEED_RIGHT: .byte $00
         ZP_MONSTER_SPEED_LEFT:  .byte $00
         ZP_BARRICADE_ROW:       .byte $00
+        ZP_LEVEL_BINARY:        .byte $00
+
+.print "Zeropage end " + toHexString(ZP_LEVEL_BINARY)
 
 BasicUpstart2(main)
 
@@ -151,6 +154,8 @@ main:
     lda #0
     sta frameCounterLo 
     sta frameCounterHi 
+    sta ZP_LEVEL_BINARY
+    sta ZP_Level
 
     // Charset setzen
     lda #%00011000

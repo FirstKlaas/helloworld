@@ -137,6 +137,7 @@ on_game_state_play:
     SET_GAME_STATE(GAME_STATE_VICTORY)
 
     // Increase Level
+    inc ZP_LEVEL_BINARY 
     sed 
     clc
     lda ZP_Level 
@@ -154,6 +155,7 @@ check_monster_low_position:
     // Level und Score zurücksetzen
     lda #0 
     sta ZP_Level
+    sta ZP_LEVEL_BINARY
     sta ZP_ScoreLo
     sta ZP_ScoreLo
 
@@ -215,6 +217,7 @@ start_new_game:
     // Reset level and Score
     lda #0 
     sta ZP_Level
+    sta ZP_LEVEL_BINARY
     sta ZP_ScoreLo
     sta ZP_ScoreLo
 
