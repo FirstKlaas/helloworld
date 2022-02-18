@@ -1,5 +1,10 @@
 .print "SPRITE DX: " + toHexString(SPRITE_DX)
 
+.macro SET_MONSTER_DOWN_SIZE_V(number_of_lines) {
+    lda #NUMBER_OF_SPRITES
+    sta MonsterDownLines
+}
+
 
 .namespace MONSTER {
 
@@ -136,4 +141,5 @@
         lda YPOS-1,x 
         clc 
         rts 
+
 }

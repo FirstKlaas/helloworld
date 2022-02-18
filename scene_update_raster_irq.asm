@@ -25,10 +25,17 @@
     !finish:
 }
 
+ship_base_raster_irq:
+    IRQ_START()
+    SET_BACKGROUND_COLOR_V(COLOR_DARKGREY)
+    SET_RASTER_LINE_V(RASTERLINE_SPACESHIP)
+    INSTALL_RASTER_VECTOR(BULLETTEST.raster_irq)
+    IRQ_EXIT()
 
 update_scene:
     IRQ_START()
     .if (COND_DEBUG) SET_BORDER_COLOR_V(COLOR_BLUE)
+    SET_BACKGROUND_COLOR_V(COLOR_BLACK)
 
     // Save value for background collisions
     lda SPRITEBACKGROUNDCOLL
@@ -97,6 +104,9 @@ on_game_state_play:
 
     jsr BULLETTEST.update_spaceship_scene
     jsr SCREEN.print_barricade
+    lda #COLOR_GREY
+    ldy ZP_BARRICADE_ROW
+    jsr SCREEN.color_row
 
     /* Animation des ersten Monsters */
     ldx Sprite0Anim
@@ -232,7 +242,6 @@ start_game:
 !:
     jsr SCREEN.clear
     SET_GAME_STATE(GAME_STATE_PLAY)
-    
     INIT_MONSTER()
 
     lda #SPRITE_STATE_ALIVE

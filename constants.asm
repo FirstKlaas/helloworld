@@ -90,7 +90,8 @@
 
     .const SCREENRAM           = $0400             //Beginn des Bildschirmspeichers
     .const SPRITE0DATA         = SCREENRAM+$03f8   //Sprite-Pointer für die                                                   //Adresse der Sprite-0-Daten
-    .const SPRITE1DATA         = SCREENRAM+$03f9   //wie eben, nur für Sprite-1
+    .const SPRITE1DATA         = SPRITE0DATA+1     //wie eben, nur für Sprite-1
+    .const SPRITE2DATA         = SPRITE0DATA+2     //wie eben, nur für Sprite-1
     
     .const CIA1_A              = $dc00             //Adresse des CIA1-A
     .const CIA1_B              = $dc01             //Adresse des CIA1-B

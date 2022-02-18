@@ -227,20 +227,41 @@
         .if (COND_DEBUG) SET_BORDER_COLOR_V(COLOR_BLACK)
 
         // VIC aktualisieren
-        lda #%00000001          // Momentan besteht das Schiff aus nur einem Sprite
+        lda #%00000111          // Momentan besteht das Schiff aus nur einem Sprite
         sta SPRITEACTIV
         
         lda SPACESHIP_YPOS
         lda #228
         sta SPRITE0Y
+        sta SPRITE0Y+2
+        sta SPRITE0Y+4
+        
         lda SPACESHIP_XPOS_LSB
         sta SPRITE0X
+        sta SPRITE0X+2
+        sta SPRITE0X+4
+        
         lda SPACESHIP_XPOS_MSB
+        asl 
+        ora SPACESHIP_XPOS_MSB
+        asl 
+        ora SPACESHIP_XPOS_MSB
         sta SPRITESMAXX
-        lda #SPACESHIP_BLK
+        lda #[SPACESHIP_BLK+2]
         sta SPRITE0DATA
-        lda #COLOR_WHITE
+        lda #[SPACESHIP_BLK+1]
+        sta SPRITE1DATA
+        lda #[SPACESHIP_BLK+0]
+        sta SPRITE2DATA
+        
+        
+        lda #COLOR_RED
         sta SPRITE0COLOR
+        lda #COLOR_LIGHTBLUE
+        sta SPRITE1COLOR
+        lda #COLOR_WHITE
+        sta SPRITE2COLOR
+
 
         // Jetz wieder zur Neuberechnung der Scene
         SET_RASTER_LINE_A(Rasterline_Scene)
@@ -372,7 +393,7 @@ check_barricade_collision:
     // Same row. Now check xpos
     ldy BXPOS-1,x 
     lda (num2), y
-    cmp #20
+    cmp #$20
     beq !next+
     cmp #$60
     beq !next+

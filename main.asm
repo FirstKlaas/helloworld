@@ -142,7 +142,7 @@ main:
     lda #GAME_STATE_CREDITS
     sta ZP_GameState_Credits
 
-    lda #$01 
+    lda #$01
     sta ZP_MONSTER_SPEED_RIGHT
     lda #$ff
     sta ZP_MONSTER_SPEED_LEFT
@@ -168,9 +168,9 @@ main:
     SET_GAME_STATE(GAME_STATE_PLAY)
     // Die Feuerpause vor dem ersten Schuss
     // ist größer
-    lda #5                  // 5 Frames Pause zwischen zwei schuessen
+    lda #10                 // 5 Frames Pause zwischen zwei schuessen
     sta firePause
-    lda #50
+    lda #25
     sta bFireCounter        // Vor dem ersten Schuss eine längere Pause
 
     // Keine vergrößerten Sprites und 
@@ -208,6 +208,9 @@ main:
     ENABLE_RASTER_IRQ()
 
     jsr SCREEN.colorize
+    ldy #0 
+    lda #COLOR_GREY
+    jsr SCREEN.color_row
     jsr SCREEN.clear
 
     lda #0

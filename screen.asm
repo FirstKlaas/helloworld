@@ -94,6 +94,9 @@
     ROW_BARRICADE_ADR:
         .lohifill 25, $2800 + 40*i
 
+    ROW_COLOR_ADR:
+        .lohifill 25, COLORRAM + 40*i
+
     player_xy_to_screen_xy:
         txa
         clc
@@ -157,6 +160,21 @@
         sta (num1),y 
         rts
 
+    print_char_row:                 
+        pha                     
+        lda ROW_ADR.hi, y
+        sta num1Hi
+        lda ROW_ADR.lo , y
+        sta num1
+        ldy #39 
+        pla
+    !:
+        sta (num1),y
+        dey 
+        bne !- 
+        sta (num1),y
+        rts
+
     print_zero_str:
         // Bildschiradresse der Zeile
         // in num1 und num1Hi ablegen
@@ -216,6 +234,33 @@
         lda (num1), y 
         rts
 
+    color_row:
+        pha 
+        lda ROW_COLOR_ADR.hi, y
+        sta num1Hi
+        lda ROW_COLOR_ADR.lo , y
+        sta num1
+        ldy #39
+        pla
+    !loop:
+        sta (num1), y 
+        dey 
+        bne !loop- 
+        sta (num1), y 
+        rts       
+         
+    color_char:
+        pha
+        lda ROW_COLOR_ADR.hi, y
+        sta num1Hi
+        lda ROW_COLOR_ADR.lo , y
+        sta num1
+        txa
+        tay
+        pla
+        sta (num1), y 
+        rts
+
     // Prints a barricade row. 
     // Y Register contains the row.
     print_barricade:
@@ -235,6 +280,8 @@
         sta (num2),y 
         dey 
         bne !loop-
+        lda (num1),y 
+        sta (num2),y 
         rts
 
 }
